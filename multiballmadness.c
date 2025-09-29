@@ -1,5 +1,6 @@
 //  Light and Dark, with multiple balls in C using raylib
 #include <stdbool.h>
+#include <stdio.h>
 #include "raylib.h"
 #include "types.h"
 
@@ -8,7 +9,8 @@ const int screenWidth = 800;
 const int screenHeight = 450;
 const float ballRadius = 10;
 const int targetFPS = 60;
-const Vector2 blockSize = { 10, 10 };
+const Vector2 blockSize = { 20, 20 };
+const int colorBlockWidth = 10;
 
 void InitGame() {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
@@ -17,14 +19,19 @@ void InitGame() {
 }
 
 void InitBalls(ballArray *balls) {
-    const ball white = { {10, 10}, {-1, -1}, LIGHTGRAY};
+    const ball white = { {220, 10}, {-1, -1}, LIGHTGRAY};
     const ball black = { {10, 10}, {1, 1}, DARKGRAY};
     appendBall(balls, white);
     appendBall(balls, black);
 }
 
 void InitBoard(blockArray *board) {
-    return;
+    for (int i = 0; i < 200; i++) {
+        block newLightBlock = { {(float)(i%colorBlockWidth)*blockSize.x,(float)(i/colorBlockWidth)*blockSize.y},LIGHTGRAY};
+        block newDarkBlock = { {((float)(i%colorBlockWidth)*blockSize.x)+(10 * blockSize.x),(float)(i/colorBlockWidth)*blockSize.y},DARKGRAY};
+        appendBlock(board, newLightBlock);
+        appendBlock(board, newDarkBlock);
+    }
 }
 
 // Update Functions
@@ -45,7 +52,9 @@ void RenderBoard(const blockArray *board) {
 
 void RenderBalls(const ballArray *balls) {
     for (int i = 0; i < balls->count; i++) {
+        Vector2 highlight = {balls->values[i].position.x - (ballRadius/4), balls->values[i].position.y - (ballRadius/4)};
         DrawCircleV(balls->values[i].position, ballRadius, balls->values[i].color);
+        DrawCircleV(highlight, 3, RAYWHITE);
     }
 }
 
