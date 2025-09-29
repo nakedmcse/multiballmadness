@@ -7,6 +7,7 @@ raylib:
 	git clone https://github.com/raysan5/raylib.git
 	make -C raylib/src
 	cp raylib/src/libraylib.a libraylib.a
+	cp raylib/src/raylib.h raylib.h
 	rm -rf raylib
 
 clean:
